@@ -5,7 +5,7 @@ import '../../models/recipe.dart';
 class EditRecipeScreen extends StatefulWidget {
   final Recipe recipe; // This parameter is passed from HomeScreen
 
-  const EditRecipeScreen({Key? key, required this.recipe}) : super(key: key);
+  const EditRecipeScreen({super.key, required this.recipe});
 
   @override
   _EditRecipeScreenState createState() => _EditRecipeScreenState();
@@ -23,7 +23,6 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
   void initState() {
     super.initState();
 
-    // Initialize text fields with the recipe's current data
     titleController.text = widget.recipe.title;
     descriptionController.text = widget.recipe.description;
     ingredientsController.text = widget.recipe.ingredients.join(', ');
@@ -33,7 +32,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
   Future<void> updateRecipe() async {
     if (titleController.text.isEmpty || descriptionController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Title and Description cannot be empty!')),
+        const SnackBar(content: Text('Title and Description cannot be empty!')),
       );
       return;
     }
@@ -56,9 +55,9 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Recipe updated successfully!')));
+        const SnackBar(content: Text('Recipe updated successfully!')));
 
-      Navigator.pop(context, true); // Return true to signal update
+      Navigator.pop(context, true); 
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: ${e.toString()}')),
@@ -73,7 +72,7 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Edit Recipe')),
+      appBar: AppBar(title: const Text('Edit Recipe')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
@@ -82,42 +81,42 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
             children: [
               TextField(
                 controller: titleController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Title',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextField(
                 controller: descriptionController,
                 maxLines: 3,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Description',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextField(
                 controller: ingredientsController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Ingredients (comma-separated)',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextField(
                 controller: imageUrlController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Image URL (optional)',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
               isLoading
-                  ? Center(child: CircularProgressIndicator())
+                  ? const Center(child: CircularProgressIndicator())
                   : ElevatedButton(
                       onPressed: updateRecipe,
-                      child: Text('Update Recipe'),
+                      child: const Text('Update Recipe'),
                     ),
             ],
           ),

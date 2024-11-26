@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AddRecipeScreen extends StatefulWidget {
+  const AddRecipeScreen({super.key});
+
   @override
   _AddRecipeScreenState createState() => _AddRecipeScreenState();
 }
@@ -15,17 +17,16 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
 
   bool isLoading = false;
 
-  // Function to add a recipe to Firestore
   Future<void> addRecipe() async {
     final user = FirebaseAuth.instance.currentUser;
 
     if (user == null) {
-      throw Exception('User is not logged in.'); // Prevent guest users from adding recipes
+      throw Exception('User is not logged in.'); 
     }
 
     if (titleController.text.isEmpty || descriptionController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Title and Description cannot be empty!')),
+        const SnackBar(content: Text('Title and Description cannot be empty!')),
       );
       return;
     }
@@ -43,23 +44,22 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
         'ingredients': ingredientsController.text
             .split(',')
             .map((ingredient) => ingredient.trim())
-            .toList(), // Convert ingredients into a list
-        'imageUrl': imageUrlController.text.trim(), // Optional image URL
-        'ownerId': user.uid, // Associate the recipe with the logged-in user's UID
+            .toList(),
+        'imageUrl': imageUrlController.text.trim(),
+        'ownerId': user.uid,
         'createdAt': FieldValue.serverTimestamp(),
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Recipe added successfully!')),
+        const SnackBar(content: Text('Recipe added successfully!')),
       );
 
-      // Clear the input fields after submission
       titleController.clear();
       descriptionController.clear();
       ingredientsController.clear();
       imageUrlController.clear();
 
-      Navigator.pop(context); // Navigate back to the previous screen
+      Navigator.pop(context); 
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: ${e.toString()}')),
@@ -75,27 +75,24 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
 
-    // Redirect guest users to login
     if (user == null) {
       return Scaffold(
-        appBar: AppBar(title: Text('Login Required')),
+        appBar: AppBar(title: const Text('Login Required')),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 'You need to log in to add recipes.',
                 style: TextStyle(fontSize: 16),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(context); // Navigate back to the previous screen
-                  // Optionally navigate to the login screen if you have one
-                  // Navigator.push(context, MaterialPageRoute(builder: (_) => LoginScreen()));
+                  Navigator.pop(context); 
                 },
-                child: Text('Go to Login'),
+                child: const Text('Go to Login'),
               ),
             ],
           ),
@@ -104,7 +101,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text('Add Recipe')),
+      appBar: AppBar(title: const Text('Add Recipe')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
@@ -113,42 +110,42 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
             children: [
               TextField(
                 controller: titleController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Title',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextField(
                 controller: descriptionController,
                 maxLines: 3,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Description',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextField(
                 controller: ingredientsController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Ingredients (comma-separated)',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               TextField(
                 controller: imageUrlController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Image URL (optional)',
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
               isLoading
-                  ? Center(child: CircularProgressIndicator())
+                  ? const Center(child: CircularProgressIndicator())
                   : ElevatedButton(
                       onPressed: addRecipe,
-                      child: Text('Add Recipe'),
+                      child: const Text('Add Recipe'),
                     ),
             ],
           ),

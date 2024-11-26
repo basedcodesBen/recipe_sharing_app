@@ -14,7 +14,7 @@ class AuthService {
       return userCredential.user;
     } catch (e) {
       print('Sign-up error: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -27,7 +27,7 @@ class AuthService {
       return userCredential.user;
     } catch (e) {
       print('Sign-in error: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -37,7 +37,7 @@ class AuthService {
       await _auth.signOut();
     } catch (e) {
       print('Sign-out error: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -46,7 +46,7 @@ class AuthService {
       await _auth.sendPasswordResetEmail(email: email);
     } catch (e) {
       print('Password reset error: $e');
-      throw e;
+      rethrow;
     }
   }
 
@@ -59,7 +59,7 @@ class AuthService {
       await currentUser?.reload();
     } catch (e) {
       print('Update profile error: $e');
-      throw e;
+      rethrow;
     }
   }
 }
