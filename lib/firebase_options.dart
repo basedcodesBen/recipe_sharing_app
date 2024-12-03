@@ -83,4 +83,5 @@ class DefaultFirebaseOptions {
     authDomain: 'recipe-sharing-app-8e4d8.firebaseapp.com',
     storageBucket: 'recipe-sharing-app-8e4d8.firebasestorage.app',
   );
+
 }
