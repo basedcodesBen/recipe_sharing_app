@@ -13,12 +13,16 @@ class AuthService {
     return userCredential.user;
   }
 
-  // Sign up with email and password
-  Future<User?> signUp(String email, String password) async {
+  // Sign up with email, password, and name
+  Future<User?> signUp(String email, String password, String name) async {
     final userCredential = await _auth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
+
+    // Set displayName after sign up
+    await userCredential.user?.updateDisplayName(name);
+
     return userCredential.user;
   }
 

@@ -47,9 +47,9 @@ class RecipeCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             // Recipe image
-            if (recipe.imageUrl != null && recipe.imageUrl!.isNotEmpty)
+            if (recipe.imageUrl.isNotEmpty)
               Image.network(
-                recipe.imageUrl!,
+                recipe.imageUrl,
                 fit: BoxFit.cover,
                 height: 150,
                 width: double.infinity,

@@ -9,17 +9,20 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController nameController = TextEditingController(); // Added for signup
 
   bool isLogin = true; // Switch between login and sign-up
   bool isLoading = false;
 
+  // Authentication function (Login or SignUp)
   Future<void> authenticate() async {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
+    final name = nameController.text.trim(); // Capture user name during signup
 
-    if (email.isEmpty || password.isEmpty) {
+    if (email.isEmpty || password.isEmpty || (isLogin == false && name.isEmpty)) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Email and password cannot be empty!')),
+        SnackBar(content: Text('Email, password, and name cannot be empty!')),
       );
       return;
     }
@@ -30,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       if (isLogin) {
-        // Log in user
+        // Login user
         await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: email,
           password: password,
@@ -40,16 +43,21 @@ class _LoginPageState extends State<LoginPage> {
         );
       } else {
         // Sign up user
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: email,
           password: password,
         );
+
+        // Set the username after signup
+        await userCredential.user?.updateDisplayName(name);
+        await userCredential.user?.reload();
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Account created successfully!')),
         );
       }
 
-      Navigator.pop(context); // Return to the previous page
+      Navigator.pop(context); // Return to the previous page after successful login/signup
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: ${e.message}')),
@@ -70,6 +78,17 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Name TextField (only for Sign Up)
+            if (!isLogin)
+              TextField(
+                controller: nameController,
+                decoration: InputDecoration(
+                  labelText: 'Name',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            SizedBox(height: 16),
+            // Email TextField
             TextField(
               controller: emailController,
               decoration: InputDecoration(
@@ -78,6 +97,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             SizedBox(height: 16),
+            // Password TextField
             TextField(
               controller: passwordController,
               obscureText: true,
@@ -87,12 +107,15 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             SizedBox(height: 24),
+            // Button to submit login/signup
             isLoading
                 ? Center(child: CircularProgressIndicator())
                 : ElevatedButton(
                     onPressed: authenticate,
                     child: Text(isLogin ? 'Login' : 'Sign Up'),
                   ),
+            SizedBox(height: 16),
+            // Toggle text button to switch between login and signup
             TextButton(
               onPressed: () {
                 setState(() {

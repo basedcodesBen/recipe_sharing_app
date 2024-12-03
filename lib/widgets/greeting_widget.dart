@@ -2,22 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class GreetingWidget extends StatelessWidget {
-  const GreetingWidget({super.key});
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  GreetingWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-
-    if (user == null) {
-      return const SizedBox.shrink(); // No widget if user is not logged in
-    }
+    final user = _auth.currentUser;
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Text(
-        'Welcome, ${user.displayName ?? user.email}!',
+        user == null
+            ? 'Hello, Guest! Please log in.'
+            : 'Hello, ${user.displayName}!',
         style: const TextStyle(
-          fontSize: 20,
+          fontSize: 20.0,
           fontWeight: FontWeight.bold,
         ),
       ),

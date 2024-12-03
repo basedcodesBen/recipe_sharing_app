@@ -26,7 +26,6 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
     titleController.text = widget.recipe.title;
     descriptionController.text = widget.recipe.description;
     ingredientsController.text = widget.recipe.ingredients.join(', ');
-    imageUrlController.text = widget.recipe.imageUrl ?? '';
   }
 
   Future<void> updateRecipe() async {

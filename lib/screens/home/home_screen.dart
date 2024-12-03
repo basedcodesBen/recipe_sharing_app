@@ -7,6 +7,7 @@ import '../auth/login_page.dart';
 import '../recipe/edit_recipe_screen.dart';
 import '../../models/recipe.dart';
 import '../../core/auth_service.dart';
+import '../../widgets/drawer_widget.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -22,6 +23,13 @@ class HomeScreen extends ConsumerWidget {
         appBar: AppBar(
           backgroundColor: Colors.red[300],
           title: const Text('Savorly'),
+          leading: IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () {
+              // Open the Drawer when the hamburger menu button is pressed
+              Scaffold.of(context).openDrawer();
+            },
+          ),
           actions: [
             TextButton(
               onPressed: () async {
@@ -40,10 +48,12 @@ class HomeScreen extends ConsumerWidget {
             ),
           ],
         ),
+        drawer: DrawerWidget(), // Adding the Drawer widget here
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const GreetingWidget(),
+            // Greeting widget displaying user's name if logged in
+            GreetingWidget(),
             Expanded(
               child: firebaseRecipesAsync.when(
                 data: (firebaseRecipes) => dummyRecipesAsync.when(
@@ -124,6 +134,7 @@ class HomeScreen extends ConsumerWidget {
             ),
           ],
         ),
+        drawer: DrawerWidget(), // Adding the Drawer widget here
         body: dummyRecipesAsync.when(
           data: (dummyRecipes) {
             return ListView.builder(
