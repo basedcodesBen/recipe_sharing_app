@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/recipe.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../screens/recipe/edit_recipe_screen.dart';
 
 class RecipeCard extends StatelessWidget {
   final Recipe recipe;
@@ -15,6 +17,8 @@ class RecipeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+
     return Card(
       elevation: 4,
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -55,14 +59,23 @@ class RecipeCard extends StatelessWidget {
                 width: double.infinity,
               ),
             const SizedBox(height: 8),
-            const SizedBox(height: 8),
-            // Action buttons (Edit)
-            if (onEdit != null)
+            if (user != null && user.uid == recipe.ownerId)
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   TextButton.icon(
-                    onPressed: onEdit,
+                    onPressed: () async {
+                      final result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditRecipeScreen(recipe: recipe),
+                        ),
+                      );
+
+                      if (result == true && onEdit != null) {
+                        onEdit!();
+                      }
+                    },
                     icon: const Icon(Icons.edit),
                     label: const Text('Edit'),
                   ),

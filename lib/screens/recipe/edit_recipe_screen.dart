@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../models/recipe.dart';
 
 class EditRecipeScreen extends StatefulWidget {
-  final Recipe recipe; // This parameter is passed from HomeScreen
+  final Recipe recipe; // This parameter is passed from the HomeScreen
 
   const EditRecipeScreen({super.key, required this.recipe});
 
@@ -26,10 +26,12 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
     titleController.text = widget.recipe.title;
     descriptionController.text = widget.recipe.description;
     ingredientsController.text = widget.recipe.ingredients.join(', ');
+    imageUrlController.text = widget.recipe.imageUrl; // Initialize with the existing image URL
   }
 
   Future<void> updateRecipe() async {
-    if (titleController.text.isEmpty || descriptionController.text.isEmpty) {
+    if (titleController.text.trim().isEmpty ||
+        descriptionController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Title and Description cannot be empty!')),
       );
@@ -43,20 +45,27 @@ class _EditRecipeScreenState extends State<EditRecipeScreen> {
     try {
       final firestore = FirebaseFirestore.instance;
 
-      await firestore.collection('recipes').doc(widget.recipe.id).update({
+      // Create updated recipe data
+      final updatedRecipeData = {
         'title': titleController.text.trim(),
         'description': descriptionController.text.trim(),
         'ingredients': ingredientsController.text
             .split(',')
             .map((ingredient) => ingredient.trim())
             .toList(),
-        'imageUrl': imageUrlController.text.trim(),
-      });
+        'imageUrl': imageUrlController.text.trim().isEmpty
+            ? widget.recipe.imageUrl // Preserve existing image if empty
+            : imageUrlController.text.trim(),
+      };
+
+      // Update the Firestore document
+      await firestore.collection('recipes').doc(widget.recipe.id).update(updatedRecipeData);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Recipe updated successfully!')));
+        const SnackBar(content: Text('Recipe updated successfully!')),
+      );
 
-      Navigator.pop(context, true); 
+      Navigator.pop(context, true); // Notify the caller that the recipe was updated
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: ${e.toString()}')),

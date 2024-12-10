@@ -14,7 +14,7 @@ final dummyRecipesProvider = FutureProvider<List<Recipe>>((ref) async {
       description: data['summary'] ?? '',
       ingredients: [],
       imageUrl: data['image'],
-      ownerId: 'dummy', // Placeholder for ownerId
+      ownerId: 'dummy',
       createdAt: DateTime.now(),
     );
   }).toList();
